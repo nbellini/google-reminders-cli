@@ -25,10 +25,11 @@ def read_yes_no(prompt) -> bool:
 
 def parse_time_str(time_str: str) -> Optional[datetime]:
     dt = dateparser.parse(time_str)
-    if dt is None:
+    end_dt = dateparser.parse(time_str)
+    if dt or end_dt is None:
         print('Unrecognizable time text. See help menu for legal formats')
         return None
-    return dt
+    return dt and end_dt
 
 
 def read_reminder_params() -> Optional[Reminder]:
@@ -62,9 +63,10 @@ def invoke_operation(args):
         else:
             title, time_str = args.create
             dt = parse_time_str(time_str)
-            if dt is None:
+            end_dt = parse_time_str(time_str)
+            if dt or end_dt is None:
                 return
-            reminder = Reminder(id=gen_id(), title=title, dt=dt)
+            reminder = Reminder(id=gen_id(), title=title, dt=dt, end_dt=end_dt)
 
         # execute creation if applicable
         if reminder is not None:
