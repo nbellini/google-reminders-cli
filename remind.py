@@ -39,7 +39,7 @@ def read_reminder_params() -> Optional[Reminder]:
     """
     title = input('What\'s the reminder: ')
     dt = parse_time_str(input('When do you want to be reminded: '))
-    if dt is not None:
+#    if dt is not None:
     #    print(f'\n"{title}" on {dt.strftime(DATE_FORMAT)}\n')
     end_dt = parse_time_str(input('When do you want reminders to stop:'))
     if dt and end_dt is not None:
