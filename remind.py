@@ -11,7 +11,8 @@ from reminder import Reminder, gen_id
 from reminders_client import RemindersClient
 
 # format is  "Fri, May 23 2019, 19:30"
-DATE_FORMAT = '%a, %b %d %Y, %H:%M'
+# DATE_FORMAT = '%a, %b %d %Y, %H:%M'
+DATE_FORMAT = '%b, @d, %Y'
 
 
 def read_yes_no(prompt) -> bool:
@@ -39,10 +40,13 @@ def read_reminder_params() -> Optional[Reminder]:
     title = input('What\'s the reminder: ')
     dt = parse_time_str(input('When do you want to be reminded: '))
     if dt is not None:
-        print(f'\n"{title}" on {dt.strftime(DATE_FORMAT)}\n')
+    #    print(f'\n"{title}" on {dt.strftime(DATE_FORMAT)}\n')
+    end_dt = parse_time_str(input('When do you want reminders to stop:'))
+    if dt and end_dt is not None:
+        print(f'\n"{title} on {dt.strftime(DATE_FORMAT)}/n')
         save = read_yes_no('Do you want to save this?')
         if save:
-            return Reminder(id=gen_id(), title=title, dt=dt)
+            return Reminder(id=gen_id(), title=title, dt=dt, end_dt=end_dt)
 
 
 def invoke_operation(args):
@@ -50,7 +54,7 @@ def invoke_operation(args):
     inspect the program arguments and invoke the appropriate operation
     """
     client = RemindersClient()
-    
+
     if args.interactive or args.create:
         # prepare the reminder to create
         if args.interactive:
@@ -61,24 +65,24 @@ def invoke_operation(args):
             if dt is None:
                 return
             reminder = Reminder(id=gen_id(), title=title, dt=dt)
-        
+
         # execute creation if applicable
         if reminder is not None:
             if client.create_reminder(reminder):
                 print('Reminder set successfully:')
                 print(reminder)
-    
+
     elif args.get:
         id = args.get
         reminder = client.get_reminder(reminder_id=id)
         if reminder is not None:
             print(reminder)
-    
+
     elif args.delete:
         id = args.delete
         if client.delete_reminder(reminder_id=id):
             print('Reminder deleted successfully')
-    
+
     elif args.list:
         num_reminders = args.list
         if num_reminders < 0:
@@ -88,7 +92,7 @@ def invoke_operation(args):
         if reminders is not None:
             for r in sorted(reminders):
                 print(r)
-    
+
     else:
         print('Wrong usage: no valid action was specified\n'
               'please read help menu (-h) to see correct usage')
@@ -124,7 +128,7 @@ def parse_args():
                        help='delete reminder by ID')
     group.add_argument('-l', type=int, metavar='N', dest='list',
                        help='list the last N created reminders, for a positive integer N')
-    
+
     return parser.parse_args()
 
 
