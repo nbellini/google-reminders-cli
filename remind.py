@@ -11,8 +11,8 @@ from reminder import Reminder, gen_id
 from reminders_client import RemindersClient
 
 # format is  "Fri, May 23 2019, 19:30"
-# DATE_FORMAT = '%a, %b %d %Y, %H:%M'
-DATE_FORMAT = '%b, @d, %Y'
+DATE_FORMAT = '%a, %b %d %Y, %H:%M'
+# DATE_FORMAT = '%b, @d, %Y'
 
 
 def read_yes_no(prompt) -> bool:
